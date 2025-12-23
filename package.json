@@ -39,10 +39,10 @@
   },
   "scripts": {
     "build": "bun run scripts/build.ts && bun run build:types",
-    "build:types": "tsc --project tsconfig.build.json",
+    "build:types": "bunx tsc --project tsconfig.build.json",
     "test": "bun test",
-    "typecheck": "tsc --noEmit",
-    "typecheck:all": "tsc --noEmit -p tsconfig.test.json",
+    "typecheck": "bunx tsc --noEmit",
+    "typecheck:all": "bunx tsc --noEmit -p tsconfig.test.json",
     "lint": "biome lint ./src ./tests",
     "lint:fix": "biome lint --write ./src ./tests",
     "format": "biome format ./src ./tests",
