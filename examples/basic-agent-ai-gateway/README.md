@@ -1,6 +1,6 @@
-# HelpDesk Multi-Agent Example
+# Basic Agent with AI Gateway
 
-This example demonstrates a multi-agent system using [adk-llm-bridge](https://www.npmjs.com/package/adk-llm-bridge) with Google ADK.
+A multi-agent HelpDesk system using [Vercel AI Gateway](https://vercel.com/ai-gateway) as the LLM provider.
 
 ## Architecture
 
@@ -32,7 +32,7 @@ flowchart TB
 ## Setup
 
 ```bash
-cd examples/basic-agent
+cd examples/basic-agent-ai-gateway
 bun install
 ```
 

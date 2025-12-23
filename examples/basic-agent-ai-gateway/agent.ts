@@ -2,6 +2,9 @@ import { FunctionTool, LlmAgent, LLMRegistry } from "@google/adk";
 import { AIGatewayLlm } from "adk-llm-bridge";
 import { z } from "zod";
 
+// Register AIGatewayLlm with ADK's LLMRegistry
+// NOTE: We import LLMRegistry from @google/adk directly to ensure
+// we register with the same instance that adk-devtools uses
 LLMRegistry.register(AIGatewayLlm);
 
 // =============================================================================
@@ -20,7 +23,6 @@ const checkInvoice = new FunctionTool({
       .describe("Customer email to find invoices"),
   }),
   execute: ({ invoiceId, email }) => {
-    // Simulated invoice lookup
     if (invoiceId) {
       return {
         status: "success",
