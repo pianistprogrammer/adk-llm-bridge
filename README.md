@@ -3,11 +3,20 @@
 [![npm version](https://img.shields.io/npm/v/adk-llm-bridge.svg)](https://www.npmjs.com/package/adk-llm-bridge)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Connect [Google ADK](https://google.github.io/adk-docs/) to **any LLM provider** through multiple gateways.
+Use **any LLM** with [Google ADK TypeScript](https://github.com/google/adk-js) in just a few lines of code.
 
 ## Why?
 
-[Google ADK TypeScript](https://github.com/google/adk-js) only supports Gemini models natively (unlike the Python version which has LiteLLM integration). This package bridges that gap, letting you use **any model** from multiple providers while keeping all ADK features like multi-agent orchestration, tool calling, and streaming.
+Google ADK TypeScript [only supports Gemini models natively](https://github.com/google/adk-js/blob/main/core/src/models/registry.ts#L113) (unlike the Python version which has LiteLLM integration). This lightweight bridge lets you use **any model** from providers like Anthropic, OpenAI, Meta, and more—while keeping all ADK features like multi-agent orchestration, tool calling, and streaming.
+
+### Key Benefits
+
+| | |
+|---|---|
+| **Minimal** | ~13KB bundle, single dependency (`openai`) |
+| **Simple** | 3 lines to integrate any model |
+| **Secure** | No complex dependency tree, just the battle-tested OpenAI SDK |
+| **Compatible** | Works with any OpenAI-compatible API (AI Gateway, OpenRouter, etc.) |
 
 ## Supported Providers
 
@@ -54,20 +63,22 @@ npm install adk-llm-bridge @google/adk
 
 ## Quick Start
 
-### With Vercel AI Gateway
+Just 3 lines to use Claude, GPT-4, or any model with ADK:
 
 ```typescript
 import { LlmAgent, LLMRegistry } from '@google/adk';
-import { AIGatewayLlm } from 'adk-llm-bridge';
+import { AIGatewayLlm } from 'adk-llm-bridge';  // 1. Import
 
-LLMRegistry.register(AIGatewayLlm);
+LLMRegistry.register(AIGatewayLlm);              // 2. Register
 
-const agent = new LlmAgent({
+const agent = new LlmAgent({                     // 3. Use any model
   name: 'assistant',
-  model: 'anthropic/claude-sonnet-4',
+  model: 'anthropic/claude-sonnet-4',            // Claude, GPT-4, Llama, etc.
   instruction: 'You are a helpful assistant.',
 });
 ```
+
+That's it. All ADK features work: tools, streaming, multi-agent, etc.
 
 ### With OpenRouter
 
