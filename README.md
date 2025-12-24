@@ -22,6 +22,9 @@ Google ADK TypeScript comes with built-in Gemini support. This lightweight bridg
 |----------|--------|----------|
 | **[Vercel AI Gateway](https://vercel.com/ai-gateway)** | 100+ models (Claude, GPT, Llama, Gemini, etc.) | Simple, fast |
 | **[OpenRouter](https://openrouter.ai/)** | 100+ models | Provider routing, fallbacks, price optimization |
+| **[OpenAI](https://openai.com/)** | GPT-4, o1, o3, etc. | Direct API access |
+| **[Anthropic](https://anthropic.com/)** | Claude models | Direct API access |
+| **[xAI](https://x.ai/)** | Grok models | Direct API access |
 | **Custom (OpenAI-compatible)** | Any model | Ollama, vLLM, Azure OpenAI, LM Studio, etc. |
 
 ## How It Works
@@ -35,16 +38,21 @@ flowchart LR
     subgraph adk-llm-bridge
         B --> C[AIGatewayLlm]
         B --> D[OpenRouterLlm]
-        B --> E[CustomLlm]
+        B --> E[OpenAILlm]
+        B --> F[AnthropicLlm]
+        B --> G[XAILlm]
+        B --> H[CustomLlm]
     end
     
-    C --> F[Vercel AI Gateway]
-    D --> G[OpenRouter]
-    E --> H[Any OpenAI-compatible API]
+    C --> I[Vercel AI Gateway]
+    D --> J[OpenRouter]
+    E --> K[OpenAI API]
+    F --> L[Anthropic API]
+    G --> M[xAI API]
+    H --> N[Any OpenAI-compatible API]
     
-    F --> I[Anthropic / OpenAI / Google / ...]
-    G --> I
-    H --> I
+    I --> O[100+ Models]
+    J --> O
 ```
 
 The package converts ADK's internal request format to OpenAI-compatible format, sends it through your chosen gateway, and converts the response back to ADK format.
@@ -97,6 +105,24 @@ const agent = new LlmAgent({
 });
 ```
 
+### With Direct Providers (OpenAI, Anthropic, xAI)
+
+```typescript
+import { LlmAgent, LLMRegistry } from '@google/adk';
+import { OpenAILlm, AnthropicLlm, XAILlm } from 'adk-llm-bridge';
+
+// Register one or more providers
+LLMRegistry.register(OpenAILlm);     // gpt-*, o1-*, o3-*
+LLMRegistry.register(AnthropicLlm);  // claude-*
+LLMRegistry.register(XAILlm);        // grok-*
+
+const agent = new LlmAgent({
+  name: 'assistant',
+  model: 'claude-sonnet-4-5',  // or 'gpt-4.1', 'grok-3', etc.
+  instruction: 'You are a helpful assistant.',
+});
+```
+
 ### With Custom Provider (Ollama, vLLM, Azure, etc.)
 
 ```typescript
@@ -131,10 +157,23 @@ OPENROUTER_SITE_URL=https://your-site.com  # optional, for ranking
 OPENROUTER_APP_NAME=Your App Name          # optional, for ranking
 ```
 
+**Direct Providers:**
+```bash
+OPENAI_API_KEY=your-openai-key
+ANTHROPIC_API_KEY=your-anthropic-key
+XAI_API_KEY=your-xai-key
+```
+
 ### Programmatic Configuration
 
 ```typescript
-import { registerAIGateway, registerOpenRouter } from 'adk-llm-bridge';
+import { 
+  registerAIGateway, 
+  registerOpenRouter,
+  registerOpenAI,
+  registerAnthropic,
+  registerXAI,
+} from 'adk-llm-bridge';
 
 // AI Gateway
 registerAIGateway({
@@ -148,13 +187,18 @@ registerOpenRouter({
   siteUrl: 'https://your-site.com',
   appName: 'Your App',
 });
+
+// Direct providers
+registerOpenAI({ apiKey: process.env.OPENAI_API_KEY });
+registerAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+registerXAI({ apiKey: process.env.XAI_API_KEY });
 ```
 
 ### Factory Functions (Per-Agent Config)
 
 ```typescript
 import { LlmAgent } from '@google/adk';
-import { AIGateway, OpenRouter, Custom } from 'adk-llm-bridge';
+import { AIGateway, OpenRouter, OpenAI, Anthropic, XAI, Custom } from 'adk-llm-bridge';
 
 // AI Gateway
 const agent1 = new LlmAgent({
@@ -175,8 +219,27 @@ const agent2 = new LlmAgent({
   instruction: 'You are helpful.',
 });
 
-// Custom provider (Ollama, vLLM, etc.)
+// Direct providers
 const agent3 = new LlmAgent({
+  name: 'openai-assistant',
+  model: OpenAI('gpt-4.1'),
+  instruction: 'You are helpful.',
+});
+
+const agent4 = new LlmAgent({
+  name: 'claude-assistant',
+  model: Anthropic('claude-sonnet-4-5', { maxTokens: 8192 }),
+  instruction: 'You are helpful.',
+});
+
+const agent5 = new LlmAgent({
+  name: 'grok-assistant',
+  model: XAI('grok-3'),
+  instruction: 'You are helpful.',
+});
+
+// Custom provider (Ollama, vLLM, etc.)
+const agent6 = new LlmAgent({
   name: 'local-assistant',
   model: Custom('llama3', { baseURL: 'http://localhost:11434/v1' }),
   instruction: 'You are helpful.',
@@ -305,6 +368,9 @@ bunx @google/adk-devtools web
 |-------|-------------|
 | `AIGatewayLlm` | LLM class for Vercel AI Gateway |
 | `OpenRouterLlm` | LLM class for OpenRouter |
+| `OpenAILlm` | LLM class for OpenAI API (gpt-*, o1-*, o3-*) |
+| `AnthropicLlm` | LLM class for Anthropic API (claude-*) |
+| `XAILlm` | LLM class for xAI API (grok-*) |
 | `CustomLlm` | LLM class for any compatible API |
 
 ### Factory Functions
@@ -313,6 +379,9 @@ bunx @google/adk-devtools web
 |----------|-------------|
 | `AIGateway(model, options?)` | Create AI Gateway LLM instance |
 | `OpenRouter(model, options?)` | Create OpenRouter LLM instance |
+| `OpenAI(model, options?)` | Create OpenAI LLM instance |
+| `Anthropic(model, options?)` | Create Anthropic LLM instance |
+| `XAI(model, options?)` | Create xAI LLM instance |
 | `createCustomLlm(config)` | Create custom LLM instance |
 | `Custom(model, options)` | Shorthand for `createCustomLlm` |
 
@@ -322,6 +391,9 @@ bunx @google/adk-devtools web
 |----------|-------------|
 | `registerAIGateway(options?)` | Register AIGatewayLlm with LLMRegistry |
 | `registerOpenRouter(options?)` | Register OpenRouterLlm with LLMRegistry |
+| `registerOpenAI(options?)` | Register OpenAILlm with LLMRegistry |
+| `registerAnthropic(options?)` | Register AnthropicLlm with LLMRegistry |
+| `registerXAI(options?)` | Register XAILlm with LLMRegistry |
 
 ### Configuration Options
 
@@ -343,6 +415,33 @@ bunx @google/adk-devtools web
 | `siteUrl` | `string` | `process.env.OPENROUTER_SITE_URL` | Your site URL (for ranking) |
 | `appName` | `string` | `process.env.OPENROUTER_APP_NAME` | Your app name (for ranking) |
 | `provider` | `object` | - | Provider routing preferences |
+| `timeout` | `number` | `60000` | Request timeout (ms) |
+| `maxRetries` | `number` | `2` | Max retry attempts |
+
+**OpenAI / OpenAILlm:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `apiKey` | `string` | `process.env.OPENAI_API_KEY` | API key |
+| `organization` | `string` | `process.env.OPENAI_ORGANIZATION` | Organization ID |
+| `project` | `string` | `process.env.OPENAI_PROJECT` | Project ID |
+| `timeout` | `number` | `60000` | Request timeout (ms) |
+| `maxRetries` | `number` | `2` | Max retry attempts |
+
+**Anthropic / AnthropicLlm:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `apiKey` | `string` | `process.env.ANTHROPIC_API_KEY` | API key |
+| `maxTokens` | `number` | `4096` | Max tokens in response |
+| `timeout` | `number` | `60000` | Request timeout (ms) |
+| `maxRetries` | `number` | `2` | Max retry attempts |
+
+**XAI / XAILlm:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `apiKey` | `string` | `process.env.XAI_API_KEY` | API key |
 | `timeout` | `number` | `60000` | Request timeout (ms) |
 | `maxRetries` | `number` | `2` | Max retry attempts |
 
