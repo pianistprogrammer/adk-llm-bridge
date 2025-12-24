@@ -107,18 +107,30 @@ const agent = new LlmAgent({
 
 ### With Direct Providers (OpenAI, Anthropic, xAI)
 
+Use direct API access without a gateway:
+
 ```typescript
-import { LlmAgent, LLMRegistry } from '@google/adk';
-import { OpenAILlm, AnthropicLlm, XAILlm } from 'adk-llm-bridge';
+import { LlmAgent } from '@google/adk';
+import { OpenAI, Anthropic, XAI } from 'adk-llm-bridge';
 
-// Register one or more providers
-LLMRegistry.register(OpenAILlm);     // gpt-*, o1-*, o3-*
-LLMRegistry.register(AnthropicLlm);  // claude-*
-LLMRegistry.register(XAILlm);        // grok-*
-
-const agent = new LlmAgent({
+// OpenAI (uses OPENAI_API_KEY env var)
+const openaiAgent = new LlmAgent({
   name: 'assistant',
-  model: 'claude-sonnet-4-5',  // or 'gpt-4.1', 'grok-3', etc.
+  model: OpenAI('gpt-4.1'),
+  instruction: 'You are a helpful assistant.',
+});
+
+// Anthropic (uses ANTHROPIC_API_KEY env var)
+const claudeAgent = new LlmAgent({
+  name: 'assistant',
+  model: Anthropic('claude-sonnet-4-5'),
+  instruction: 'You are a helpful assistant.',
+});
+
+// xAI (uses XAI_API_KEY env var)
+const grokAgent = new LlmAgent({
+  name: 'assistant',
+  model: XAI('grok-3'),
   instruction: 'You are a helpful assistant.',
 });
 ```
