@@ -120,9 +120,9 @@ describe("convertAnthropicRequest", () => {
 
       expect(result.tools).toBeDefined();
       expect(result.tools).toHaveLength(1);
-      expect(result.tools![0].name).toBe("get_weather");
-      expect(result.tools![0].description).toBe("Get current weather");
-      expect(result.tools![0].input_schema).toEqual({
+      expect(result.tools?.[0].name).toBe("get_weather");
+      expect(result.tools?.[0].description).toBe("Get current weather");
+      expect(result.tools?.[0].input_schema).toEqual({
         type: "object",
         properties: {
           city: { type: "string" },
@@ -159,7 +159,7 @@ describe("convertAnthropicRequest", () => {
 
       const result = convertAnthropicRequest(request);
 
-      const schema = result.tools![0].input_schema as Record<string, unknown>;
+      const schema = result.tools?.[0].input_schema as Record<string, unknown>;
       expect(schema.type).toBe("object");
       const props = schema.properties as Record<string, { type: string }>;
       expect(props.name.type).toBe("string");
