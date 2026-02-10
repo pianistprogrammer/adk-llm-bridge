@@ -576,6 +576,83 @@ export interface AnthropicRegisterOptions {
 }
 
 // =============================================================================
+// SAP AI Core Provider Types
+// =============================================================================
+
+/**
+ * Configuration options for the SAP AI Core provider.
+ *
+ * SAP AI Core is SAP's managed AI service that provides access to various
+ * LLM models through deployment-specific endpoints. This provider handles
+ * the specific authentication and configuration requirements of SAP AI Core.
+ *
+ * @example
+ * ```typescript
+ * const config: SAPAICoreConfig = {
+ *   model: "gpt-4.1",
+ *   baseURL: "https://api.ai.prod.eu-central-1.aws.ml.hana.ondemand.com",
+ *   deploymentId: "d6e93fe0efe29155",
+ *   authToken: process.env.SAP_AUTH_TOKEN,
+ *   resourceGroup: "6a88fab9-904a-4ff2-a10c-6fd978fab614",
+ *   apiVersion: "2024-02-15-preview" // optional
+ * };
+ * ```
+ *
+ * @see {@link BaseProviderConfig} for inherited options
+ * @see {@link SAPAICore} for the factory function
+ */
+export interface SAPAICoreConfig extends BaseProviderConfig {
+  /**
+   * Deployment ID for the SAP AI Core deployment.
+   *
+   * This ID is part of the deployment-specific endpoint URL.
+   *
+   * @example "d6e93fe0efe29155"
+   */
+  deploymentId?: string;
+
+  /**
+   * Authorization bearer token for SAP AI Core authentication.
+   *
+   * Sent as the `Authorization: Bearer <token>` header.
+   *
+   * @example "eyJ0eXAiOiJKV1QiLCJqaWQi..."
+   */
+  authToken?: string;
+
+  /**
+   * AI Resource Group ID for SAP AI Core.
+   *
+   * Sent as the `AI-Resource-Group` header to identify the resource group.
+   *
+   * @example "6a88fab9-904a-4ff2-a10c-6fd978fab614"
+   */
+  resourceGroup?: string;
+
+  /**
+   * API version for the SAP AI Core endpoint.
+   *
+   * Sent as a query parameter `api-version` in the request URL.
+   *
+   * @defaultValue "2024-02-15-preview"
+   * @example "2024-02-15-preview"
+   */
+  apiVersion?: string;
+
+  /**
+   * Additional HTTP headers to include in all requests.
+   *
+   * @example
+   * ```typescript
+   * headers: {
+   *   "X-Custom-Header": "value"
+   * }
+   * ```
+   */
+  headers?: Record<string, string>;
+}
+
+// =============================================================================
 // Streaming Types (shared)
 // =============================================================================
 

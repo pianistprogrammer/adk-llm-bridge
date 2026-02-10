@@ -13,6 +13,7 @@
  * - **OpenAI**: Direct access to OpenAI's API (GPT-4, o1, etc.)
  * - **xAI**: Direct access to xAI's API (Grok models)
  * - **Anthropic**: Direct access to Anthropic's API (Claude models)
+ * - **SAP AI Core**: SAP's managed AI service for LLM deployments
  * - **Custom**: Connect to any compatible API (Ollama, vLLM, Azure, etc.)
  *
  * @module providers
@@ -25,6 +26,7 @@
  *   OpenAI,
  *   XAI,
  *   Anthropic,
+ *   SAPAICore,
  *   createCustomLlm,
  *   Custom,
  *   registerAIGateway,
@@ -41,4 +43,5 @@ export * from "./anthropic";
 export * from "./custom";
 export * from "./openai";
 export * from "./openrouter";
+export * from "./sap-ai-core";
 export * from "./xai";
