@@ -11,6 +11,7 @@ Examples of using `adk-llm-bridge` with Google ADK and multiple LLM providers.
 | [basic-agent-openai](./basic-agent-openai) | OpenAI | Multi-agent HelpDesk with GPT models |
 | [basic-agent-anthropic](./basic-agent-anthropic) | Anthropic | Multi-agent HelpDesk with Claude models |
 | [basic-agent-xai](./basic-agent-xai) | xAI | Multi-agent HelpDesk with Grok models |
+| [basic-agent-sap-ai-core](./basic-agent-sap-ai-core) | SAP AI Core | Multi-agent QA system for SAP BTP |
 | [basic-agent-lmstudio](./basic-agent-lmstudio) | LM Studio | Multi-agent HelpDesk with local models |
 | [express-server](./express-server) | AI Gateway | Full HTTP API with tools, state & streaming |
 
@@ -83,6 +84,18 @@ Local models via LM Studio (no API key required):
 ```bash
 # First, start LM Studio and load a model
 cd examples/basic-agent-lmstudio
+bun install
+bun run web
+```
+
+### basic-agent-sap-ai-core
+
+SAP AI Core deployment with multi-agent QA system:
+
+```bash
+cd examples/basic-agent-sap-ai-core
+cp .env.example .env
+# Edit .env with your SAP AI Core credentials
 bun install
 bun run web
 ```
@@ -278,4 +291,9 @@ bun run examples/basic-agent-ai-gateway/agent.ts
 | `OPENROUTER_API_KEY` | OpenRouter | OpenRouter API key |
 | `OPENROUTER_SITE_URL` | OpenRouter | Your site URL (for ranking) |
 | `OPENROUTER_APP_NAME` | OpenRouter | Your app name (for ranking) |
+| `SAP_AI_CORE_BASE_URL` | SAP AI Core | SAP AI Core base URL |
+| `SAP_AI_CORE_DEPLOYMENT_ID` | SAP AI Core | Deployment ID |
+| `SAP_AI_CORE_AUTH_TOKEN` | SAP AI Core | JWT Bearer token |
+| `SAP_AI_CORE_RESOURCE_GROUP` | SAP AI Core | Resource Group ID |
+| `SAP_AI_CORE_API_VERSION` | SAP AI Core | API version (optional) |
 | `LMSTUDIO_BASE_URL` | LM Studio | Local server URL (default: http://localhost:1234/v1) |
