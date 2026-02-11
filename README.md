@@ -167,9 +167,9 @@ model: Anthropic('claude-sonnet-4-5', {
 // SAP AI Core with deployment details
 model: SAPAICore('gpt-4.1', {
   baseURL: 'https://api.ai.prod.eu-central-1.aws.ml.hana.ondemand.com',
-  deploymentId: 'd6e93fe0efe29155',
+  deploymentId: '',
   authToken: process.env.SAP_AI_CORE_AUTH_TOKEN,
-  resourceGroup: '6a88fab9-904a-4ff2-a10c-6fd978fab614',
+  resourceGroup: '',
   apiVersion: '2024-02-15-preview'  // optional
 })
 ```
