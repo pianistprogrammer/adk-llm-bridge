@@ -24,6 +24,7 @@ Google ADK TypeScript comes with built-in Gemini support. This bridge extends it
 | **[OpenAI](https://openai.com/)** | GPT-4, o1, o3, etc. | Direct API access |
 | **[Anthropic](https://anthropic.com/)** | Claude models | Direct API access |
 | **[xAI](https://x.ai/)** | Grok models | Direct API access |
+| **[SAP AI Core](https://help.sap.com/docs/sap-ai-core)** | Various models | SAP managed AI service |
 | **Custom (OpenAI-compatible)** | Any model | Ollama, vLLM, Azure OpenAI, LM Studio, etc. |
 
 ## Installation
@@ -58,7 +59,7 @@ That's it. All ADK features work: tools, streaming, multi-agent, etc.
 ### Other Providers
 
 ```typescript
-import { OpenRouter, OpenAI, Anthropic, XAI, Custom } from 'adk-llm-bridge';
+import { OpenRouter, OpenAI, Anthropic, XAI, SAPAICore, Custom } from 'adk-llm-bridge';
 
 // OpenRouter - 100+ models with routing
 model: OpenRouter('anthropic/claude-sonnet-4')
@@ -71,6 +72,14 @@ model: Anthropic('claude-sonnet-4-5')
 
 // xAI - Direct API
 model: XAI('grok-3-beta')
+
+// SAP AI Core - Managed AI service
+model: SAPAICore('gpt-4.1', {
+  baseURL: 'https://api.ai.prod.eu-central-1.aws.ml.hana.ondemand.com',
+  deploymentId: 'd6e93fe0efe29155',
+  authToken: process.env.SAP_AUTH_TOKEN,
+  resourceGroup: '6a88fab9-904a-4ff2-a10c-6fd978fab614'
+})
 
 // Local models (LM Studio, Ollama, etc.)
 model: Custom('your-model', { baseURL: 'http://localhost:1234/v1' })
@@ -119,12 +128,22 @@ ANTHROPIC_API_KEY=your-anthropic-key
 XAI_API_KEY=your-xai-key
 ```
 
+**SAP AI Core:**
+```bash
+SAP_AI_CORE_BASE_URL=https://api.ai.prod.eu-central-1.aws.ml.hana.ondemand.com
+SAP_AI_CORE_DEPLOYMENT_ID=your-deployment-id
+SAP_AI_CORE_AUTH_TOKEN=your-jwt-token
+SAP_AI_CORE_RESOURCE_GROUP=your-resource-group-id
+SAP_AI_CORE_API_VERSION=2024-02-15-preview  # optional
+SAP_AI_CORE_MODEL=gpt-4.1                   # optional
+```
+
 ### Programmatic Configuration
 
 Pass options directly to the factory functions:
 
 ```typescript
-import { AIGateway, OpenRouter, Anthropic } from 'adk-llm-bridge';
+import { AIGateway, OpenRouter, Anthropic, SAPAICore } from 'adk-llm-bridge';
 
 // AI Gateway with custom URL
 model: AIGateway('anthropic/claude-sonnet-4', {
@@ -143,6 +162,15 @@ model: OpenRouter('anthropic/claude-sonnet-4', {
 model: Anthropic('claude-sonnet-4-5', {
   apiKey: process.env.ANTHROPIC_API_KEY,
   maxTokens: 8192,
+})
+
+// SAP AI Core with deployment details
+model: SAPAICore('gpt-4.1', {
+  baseURL: 'https://api.ai.prod.eu-central-1.aws.ml.hana.ondemand.com',
+  deploymentId: 'd6e93fe0efe29155',
+  authToken: process.env.SAP_AI_CORE_AUTH_TOKEN,
+  resourceGroup: '6a88fab9-904a-4ff2-a10c-6fd978fab614',
+  apiVersion: '2024-02-15-preview'  // optional
 })
 ```
 
@@ -222,6 +250,7 @@ const agent = new LlmAgent({
 | `OpenAI(model, options?)` | OpenAI direct API |
 | `Anthropic(model, options?)` | Anthropic direct API |
 | `XAI(model, options?)` | xAI direct API |
+| `SAPAICore(model, options)` | SAP AI Core managed service |
 | `Custom(model, options)` | Any OpenAI-compatible API |
 
 ### Configuration Options
@@ -274,7 +303,19 @@ const agent = new LlmAgent({
 | `timeout` | `number` | `60000` | Request timeout (ms) |
 | `maxRetries` | `number` | `2` | Max retry attempts |
 
-**Custom:
+**SAPAICore:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `baseURL` | `string` | - | SAP AI Core API base URL (required) |
+| `deploymentId` | `string` | - | Deployment ID (required) |
+| `authToken` | `string` | - | JWT Bearer token (required) |
+| `resourceGroup` | `string` | - | AI Resource Group ID (required) |
+| `apiVersion` | `string` | `"2024-02-15-preview"` | API version |
+| `timeout` | `number` | `60000` | Request timeout (ms) |
+| `maxRetries` | `number` | `2` | Max retry attempts |
+
+**Custom:**
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
@@ -297,6 +338,7 @@ See the [examples](./examples) directory:
 - **[basic-agent-openai](./examples/basic-agent-openai)** - Multi-agent HelpDesk with OpenAI
 - **[basic-agent-anthropic](./examples/basic-agent-anthropic)** - Multi-agent HelpDesk with Anthropic
 - **[basic-agent-xai](./examples/basic-agent-xai)** - Multi-agent HelpDesk with xAI
+- **[basic-agent-sap-ai-core](./examples/basic-agent-sap-ai-core)** - Multi-agent QA system with SAP AI Core
 - **[basic-agent-lmstudio](./examples/basic-agent-lmstudio)** - Multi-agent HelpDesk with LM Studio
 - **[express-server](./examples/express-server)** - Production HTTP API with sessions, streaming, tools
 

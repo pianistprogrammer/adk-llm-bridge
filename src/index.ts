@@ -126,6 +126,17 @@ export {
 } from "./providers/anthropic";
 
 // =============================================================================
+// SAP AI Core Provider
+// =============================================================================
+
+export {
+  createSAPAICoreLlm,
+  SAPAICore,
+  SAPAICoreLlm,
+  type SAPAICoreLlmProviderConfig,
+} from "./providers/sap-ai-core";
+
+// =============================================================================
 // Custom LLM Provider (Any Compatible API)
 // =============================================================================
 
@@ -158,6 +169,8 @@ export type {
   OpenRouterProviderPreferences,
   OpenRouterRegisterOptions,
   RegisterOptions,
+  // SAP AI Core types
+  SAPAICoreConfig,
   StreamAccumulator,
   StreamChunkResult,
   // Streaming types
